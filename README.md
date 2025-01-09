@@ -9,6 +9,7 @@ The idea of this project is to get info about a server's hardware in real time t
 - Gorilla Websocket
 - Echo Framework
 - HTMX
+- github.com/shirou/gopsutil/v4 (to get the hardware info)
 
 ## To use
 1. Clone this repo
