@@ -1,8 +1,8 @@
-# Server Health Monitor
+# Real-Time Server Health Monitor
 
 ![imagen](https://github.com/user-attachments/assets/19ab0608-8de0-47fe-8914-6e364ea147d1)
 
-The idea of this project is to get info about a server's hardware to future monitoring
+The idea of this project is to get info about a server's hardware in real time to future monitoring.
 
 ## Techonologies Used
 - Go
