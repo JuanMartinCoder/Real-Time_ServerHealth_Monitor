@@ -7,5 +7,5 @@ type Routes struct {
 
 var RoutesInstance = Routes{
 	MAIN:    "/",
-	MONITOR: "/monitor",
+	MONITOR: "/ws",
 }

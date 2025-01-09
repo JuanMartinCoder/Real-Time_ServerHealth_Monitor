@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/disk"
@@ -10,15 +11,24 @@ import (
 )
 
 type SystemInfo struct {
-	Hostname  string `json:"hostname"`
-	CPU       string `json:"cpu"`
-	CPUCores  string `json:"cpucores"`
-	Platform  string `json:"platform"`
-	RAMTotal  string `json:"ramtotal"`
-	RAMFree   string `json:"ramfree"`
-	DiskTotal string `json:"disktotal"`
-	DiskFree  string `json:"diskfree"`
+	Hostname       string `json:"hostname"`
+	CPU            string `json:"cpu"`
+	CPUCores       string `json:"cpucores"`
+	CPUSpeed       string `json:"cpuspeed"`
+	Platform       string `json:"platform"`
+	RAMTotal       string `json:"ramtotal"`
+	RAMFree        string `json:"ramfree"`
+	RAMUsedPercent string `json:"ramused"`
+	DiskTotal      string `json:"disktotal"`
+	DiskFree       string `json:"diskfree"`
+	DiskUsed       string `json:"diskused"`
+	DiskPercent    string `json:"diskpercent"`
 }
+
+const (
+	megabyteDiv uint64 = 1024 * 1024
+	gigabyteDiv uint64 = megabyteDiv * 1024
+)
 
 func GetCPUSection() []cpu.InfoStat {
 	cpuStat, err := cpu.Info()
@@ -58,15 +68,26 @@ func GetSystemInfo() *SystemInfo {
 	cpuStat := GetCPUSection()
 	diskStat := GetDiskSection()
 
+	RAMTotalUnitFormated := strconv.FormatUint(vmStat.Total/megabyteDiv, 10)
+	RAMFreeUnitFormated := strconv.FormatUint(vmStat.Free/megabyteDiv, 10)
+
+	DiskTotalUnitFormated := strconv.FormatUint(diskStat.Total/gigabyteDiv, 10)
+	DiskFreeUnitFormated := strconv.FormatUint(diskStat.Free/gigabyteDiv, 10)
+	DiskUsedUnitFormated := strconv.FormatUint(diskStat.Used/gigabyteDiv, 10)
+
 	sysInfo := &SystemInfo{
 		hostStat.Hostname,
 		cpuStat[0].ModelName,
 		fmt.Sprintf("%d", len(cpuStat)),
+		fmt.Sprintf("%.2f", cpuStat[0].Mhz),
 		hostStat.Platform,
-		fmt.Sprintf("%d", vmStat.Total),
-		fmt.Sprintf("%d", vmStat.Free),
-		fmt.Sprintf("%d", diskStat.Total),
-		fmt.Sprintf("%d", diskStat.Free),
+		RAMTotalUnitFormated,
+		RAMFreeUnitFormated,
+		fmt.Sprintf("%.2f", vmStat.UsedPercent),
+		DiskTotalUnitFormated,
+		DiskFreeUnitFormated,
+		DiskUsedUnitFormated,
+		fmt.Sprintf("%.2f", diskStat.UsedPercent),
 	}
 
 	return sysInfo
