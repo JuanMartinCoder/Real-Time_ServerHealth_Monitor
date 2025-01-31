@@ -15,7 +15,7 @@ The idea of this project is to get info about a server's hardware in real time t
 1. Clone this repo
 2. in the repo folder do 
 ```go
-go run main.go
+go run .
 ```
 3. Go to localhost:1313/ to view your system's data
    
